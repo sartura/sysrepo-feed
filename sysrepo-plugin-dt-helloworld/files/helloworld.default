@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -x /bin/sysrepoctl ]; then
+	sysrepoctl --install --yang=/etc/sysrepo/yang/helloworld@2017-06-07.yang
+fi
+
+exit 0
