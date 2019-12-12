@@ -1,0 +1,81 @@
+Index: Netopeer2/cli/CMakeLists.txt
+===================================================================
+--- Netopeer2.orig/cli/CMakeLists.txt
++++ Netopeer2/cli/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 2.6)
+ 
+ # include custom Modules
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../CMakeModules/")
++set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+ 
+ project(netopeer2-cli C)
+ include(GNUInstallDirs)
+@@ -84,11 +84,11 @@ endif()
+ install(FILES ${PROJECT_SOURCE_DIR}/doc/${PROJECT_NAME}.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+ 
+ # clean cmake cache
+-add_custom_target(cleancache
++add_custom_target(cleancache_cli
+     COMMAND make clean
+     COMMAND find . -iname '*cmake*' -not -name CMakeLists.txt -exec rm -rf {} +
+     COMMAND rm -rf Makefile Doxyfile
+     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+ # uninstall
+-add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/uninstall.cmake")
++add_custom_target(uninstall_cli "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/uninstall.cmake")
+Index: Netopeer2/CMakeLists.txt
+===================================================================
+--- /dev/null
++++ Netopeer2/CMakeLists.txt
+@@ -0,0 +1,4 @@
++cmake_minimum_required(VERSION 2.8.9)
++
++add_subdirectory(cli)
++add_subdirectory(server)
+Index: Netopeer2/server/CMakeLists.txt
+===================================================================
+--- Netopeer2.orig/server/CMakeLists.txt
++++ Netopeer2/server/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 2.8.9)
+ 
+ # include custom Modules
+-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../CMakeModules/")
++set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+ 
+ project(netopeer2-server C)
+ include(GNUInstallDirs)
+@@ -186,7 +186,7 @@ configure_file("${PROJECT_SOURCE_DIR}/co
+ include_directories(${PROJECT_BINARY_DIR})
+ 
+ # clean cmake cache
+-add_custom_target(cleancache
++add_custom_target(cleancache_server
+     COMMAND make clean
+     COMMAND find . -iname '*cmake*' -not -name CMakeLists.txt -exec rm -rf {} +
+     COMMAND rm -rf Makefile Doxyfile
+@@ -194,4 +194,4 @@ add_custom_target(cleancache
+ )
+ 
+ # uninstall
+-add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/uninstall.cmake")
++add_custom_target(uninstall_server "${CMAKE_COMMAND}" -P "${CMAKE_MODULE_PATH}/uninstall.cmake")
+Index: Netopeer2/server/setup.sh
+===================================================================
+--- Netopeer2.orig/server/setup.sh
++++ Netopeer2/server/setup.sh
+@@ -25,10 +25,10 @@ $SYSREPOCTL -i $MODDIR/ietf-datastores@2
+ # ietf-netconf-nmda
+ $SYSREPOCTL -i $MODDIR/ietf-netconf-nmda@2019-01-07.yang -e origin -e with-defaults -s $MODDIR -v2
+ # notification modules
+-$SYSREPOCTL -i $MODDIR/nc-notifications@2008-07-14.yang -s $MODDIR -v2
+-$SYSREPOCTL -c nc-notifications -o $OWNER -g $GROUP -v2
+ $SYSREPOCTL -i $MODDIR/notifications@2008-07-14.yang -v2
+ $SYSREPOCTL -c notifications -o $OWNER -g $GROUP -v2
++$SYSREPOCTL -i $MODDIR/nc-notifications@2008-07-14.yang -s $MODDIR -v2
++$SYSREPOCTL -c nc-notifications -o $OWNER -g $GROUP -v2
+ # ietf-netconf-server modules
+ $SYSREPOCTL -i $MODDIR/ietf-x509-cert-to-name@2014-12-10.yang -v2
+ $SYSREPOCTL -i $MODDIR/ietf-crypto-types@2019-07-02.yang -v2

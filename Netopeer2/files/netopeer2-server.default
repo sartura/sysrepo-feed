@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Warning, problems can occur if the device restarts in the middle of this uci-default script
+
+sh /etc/Netopeer2/scripts/setup.sh /usr/bin/sysrepoctl /etc/Netopeer2/modules root
+sh /etc/Netopeer2/scripts/merge_hostkey.sh /usr/bin/sysrepocfg /usr/bin/openssl
+sh /etc/Netopeer2/scripts/merge_config.sh /usr/bin/sysrepocfg genkey
+
+exit 0
